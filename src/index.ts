@@ -1,7 +1,8 @@
+// @ts-nocheck
 require("dotenv").config();
 console.log("DB URL:", process.env.DATABASE_URL);
 
-// const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const ticketRoutes = require("./routes/tickets");
