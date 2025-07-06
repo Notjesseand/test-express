@@ -1,11 +1,11 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const pool = require("../db");
+// const express = require("express");
+// const jwt = require("jsonwebtoken");
+// const pool = require("../db");
 
-const router = express.Router();
+// const router = express.Router();
 
 // ✅ Auth middleware to verify JWT token
-function authMiddleware(req, res, next) {
+function authMiddleware(req: any, res: any, next: any) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) return res.status(401).json({ error: "No token provided" });
@@ -23,7 +23,7 @@ function authMiddleware(req, res, next) {
 }
 
 // ✅ GET /api/tickets - Get tickets for admin's category (protected)
-router.get("/tickets", authMiddleware, async (req, res) => {
+router.get("/tickets", authMiddleware, async (req: any, res: any) => {
   const category = req.admin.category;
 
   try {
@@ -39,7 +39,7 @@ router.get("/tickets", authMiddleware, async (req, res) => {
 });
 
 // ✅ POST /api/tickets - Create new ticket (unprotected or adjust if needed)
-router.post("/tickets", async (req, res) => {
+router.post("/tickets", async (req: any, res: any) => {
   const { title, description, category } = req.body;
 
   try {
@@ -56,24 +56,28 @@ router.post("/tickets", async (req, res) => {
 });
 
 // ✅ PUT /api/tickets/:id/resolve - Mark ticket as resolved
-router.put("/tickets/:id/resolve", authMiddleware, async (req, res) => {
-  const ticketId = req.params.id;
+router.put(
+  "/tickets/:id/resolve",
+  authMiddleware,
+  async (req: any, res: any) => {
+    const ticketId = req.params.id;
 
-  try {
-    const result = await pool.query(
-      "UPDATE tickets SET status = 'resolved' WHERE id = $1 RETURNING *",
-      [ticketId]
-    );
+    try {
+      const result = await pool.query(
+        "UPDATE tickets SET status = 'resolved' WHERE id = $1 RETURNING *",
+        [ticketId]
+      );
 
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Ticket not found" });
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: "Ticket not found" });
+      }
+
+      res.json({ message: "Ticket resolved", ticket: result.rows[0] });
+    } catch (err) {
+      console.error("Error resolving ticket:", err);
+      res.status(500).json({ error: "Failed to resolve ticket" });
     }
-
-    res.json({ message: "Ticket resolved", ticket: result.rows[0] });
-  } catch (err) {
-    console.error("Error resolving ticket:", err);
-    res.status(500).json({ error: "Failed to resolve ticket" });
   }
-});
+);
 
 module.exports = router;

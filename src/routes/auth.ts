@@ -6,7 +6,7 @@ const pool = require("../db");
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: any, res: any) => {
   const { username, password } = req.body;
 
   console.log("Received login:", username, password);
