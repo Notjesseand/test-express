@@ -3,8 +3,8 @@ console.log("DB URL:", process.env.DATABASE_URL);
 
 const express = require("express");
 const cors = require("cors");
-const authRoutes = require("/src/routes/auth");
-const ticketRoutes = require("/src/routes/tickets");
+const authRoutes = require("/routes/auth");
+const ticketRoutes = require("/routes/tickets");
 
 const app = express();
 app.use(cors());
