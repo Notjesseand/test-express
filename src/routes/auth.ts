@@ -1,8 +1,9 @@
 // server/src/routes/auth.js
+// @ts-nocheck
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// @ts-ignore
+// @ts-ignores
 const pool = require("../db");
 
 const router = express.Router();

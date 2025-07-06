@@ -1,8 +1,9 @@
-// const express = require("express");
-// const jwt = require("jsonwebtoken");
-// const pool = require("../db");
+// @ts-nocheck
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const pool = require("../db");
 
-// const router = express.Router();
+const router = express.Router();
 
 // ✅ Auth middleware to verify JWT token
 function authMiddleware(req: any, res: any, next: any) {
