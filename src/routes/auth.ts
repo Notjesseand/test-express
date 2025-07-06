@@ -2,6 +2,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+// @ts-ignore
 const pool = require("../db");
 
 const router = express.Router();
