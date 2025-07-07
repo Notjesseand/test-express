@@ -23,7 +23,7 @@ function authMiddleware(req: any, res: any, next: any) {
   }
 }
 
-// ✅ GET /api/tickets - Get tickets for admin's category (protected)
+//  GET /api/tickets - Get tickets for admin's category (protected)
 router.get("/tickets", authMiddleware, async (req: any, res: any) => {
   const category = req.admin.category;
 
@@ -38,23 +38,6 @@ router.get("/tickets", authMiddleware, async (req: any, res: any) => {
     res.status(500).json({ error: "Failed to fetch tickets" });
   }
 });
-
-// ✅ POST /api/tickets - Create new ticket (unprotected or adjust if needed)
-// router.post("/tickets", async (req: any, res: any) => {
-//   const { title, description, category } = req.body;
-
-//   try {
-//     const result = await pool.query(
-//       "INSERT INTO tickets (title, description, category, status) VALUES ($1, $2, $3, $4) RETURNING *",
-//       [title, description, category, "open"]
-//     );
-
-//     res.status(201).json(result.rows[0]);
-//   } catch (err) {
-//     console.error("Error creating ticket:", err);
-//     res.status(500).json({ error: "Failed to create ticket" });
-//   }
-// });
 
 router.post("/tickets", async (req, res) => {
   const { title, description, category } = req.body;
@@ -77,7 +60,7 @@ router.post("/tickets", async (req, res) => {
   console.log("Incoming ticket:", req.body);
 });
 
-// ✅ PUT /api/tickets/:id/resolve - Mark ticket as resolved
+// PUT /api/tickets/:id/resolve - Mark ticket as resolved
 router.put(
   "/tickets/:id/resolve",
   authMiddleware,
@@ -101,5 +84,26 @@ router.put(
     }
   }
 );
+
+// ✅ DELETE /api/tickets/:id - Delete a ticket by ID
+router.delete("/tickets/:id", authMiddleware, async (req, res) => {
+  const ticketId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      "DELETE FROM tickets WHERE id = $1 RETURNING *",
+      [ticketId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    res.json({ message: "Ticket deleted", ticket: result.rows[0] });
+  } catch (err) {
+    console.error("Error deleting ticket:", err);
+    res.status(500).json({ error: "Failed to delete ticket" });
+  }
+});
 
 module.exports = router;
