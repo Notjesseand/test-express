@@ -74,8 +74,8 @@ router.post("/tickets", async (req, res) => {
     console.error("Error creating ticket:", err);
     res.status(500).json({ error: "Failed to create ticket" });
   }
+  console.log("Incoming ticket:", req.body);
 });
-console.log("Incoming ticket:", req.body);
 
 // ✅ PUT /api/tickets/:id/resolve - Mark ticket as resolved
 router.put(
