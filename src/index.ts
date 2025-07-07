@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const ticketRoutes = require("./routes/tickets");
+const jaja = "";
 
 const app = express();
 app.use(cors());
