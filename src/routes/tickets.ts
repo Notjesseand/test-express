@@ -40,8 +40,28 @@ router.get("/tickets", authMiddleware, async (req: any, res: any) => {
 });
 
 // ✅ POST /api/tickets - Create new ticket (unprotected or adjust if needed)
-router.post("/tickets", async (req: any, res: any) => {
+// router.post("/tickets", async (req: any, res: any) => {
+//   const { title, description, category } = req.body;
+
+//   try {
+//     const result = await pool.query(
+//       "INSERT INTO tickets (title, description, category, status) VALUES ($1, $2, $3, $4) RETURNING *",
+//       [title, description, category, "open"]
+//     );
+
+//     res.status(201).json(result.rows[0]);
+//   } catch (err) {
+//     console.error("Error creating ticket:", err);
+//     res.status(500).json({ error: "Failed to create ticket" });
+//   }
+// });
+
+router.post("/tickets", async (req, res) => {
   const { title, description, category } = req.body;
+
+  if (!title || !description || !category) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
 
   try {
     const result = await pool.query(
@@ -55,6 +75,7 @@ router.post("/tickets", async (req: any, res: any) => {
     res.status(500).json({ error: "Failed to create ticket" });
   }
 });
+console.log("Incoming ticket:", req.body);
 
 // ✅ PUT /api/tickets/:id/resolve - Mark ticket as resolved
 router.put(
